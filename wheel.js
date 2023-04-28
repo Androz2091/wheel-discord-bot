@@ -2,6 +2,7 @@ const { join } = require('path');
 const { Canvas, createCanvas, loadImage, registerFont } = require('canvas');
 // @ts-ignore
 const GIFEncoder = require("gif-encoder-2");
+const gifken = require('gifken')
 
 registerFont(join(__dirname, "assets", "Poppins", "Poppins-Bold.ttf"), {
     family: "PoppinsBold",
@@ -52,7 +53,7 @@ module.exports.createSpinWheel = async (
         ctx.fill();
 
         // Draw the line
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 1;
         ctx.strokeStyle = "white";
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
@@ -171,7 +172,7 @@ module.exports.createGIF = async (data) => {
             join(__dirname, "assets", "logo.png")
         );
         ctx.drawImage(playbutton, centerX - 35, centerY - 35, 70, 70);
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 1;
         ctx.strokeStyle = "white";
         ctx.beginPath();
         ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI, false);
