@@ -26,7 +26,7 @@ module.exports.createSpinWheel = async (
     // Draw the circle
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "black";
     ctx.fill();
     ctx.lineWidth = 10;
     ctx.strokeStyle = "black";
@@ -54,7 +54,7 @@ module.exports.createSpinWheel = async (
 
         // Draw the line
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = "black";
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
@@ -106,8 +106,8 @@ module.exports.createSpinWheel = async (
         join(__dirname, "assets", "logo.png")
     );
     ctx.drawImage(playbutton, centerX - 35, centerY - 35, 70, 70);
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "white";
+    ctx.lineWidth = 0;
+    ctx.strokeStyle = "black";
     ctx.beginPath();
     ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI, false);
     ctx.stroke();
@@ -172,8 +172,8 @@ module.exports.createGIF = async (data) => {
             join(__dirname, "assets", "logo.png")
         );
         ctx.drawImage(playbutton, centerX - 35, centerY - 35, 70, 70);
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "white";
+        ctx.lineWidth = 0;
+        ctx.strokeStyle = "black";
         ctx.beginPath();
         ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI, false);
         ctx.stroke();
