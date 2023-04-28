@@ -196,7 +196,7 @@ module.exports.createGIF = async (data) => {
     let rotationAngleIncreaseInDegree = 0.01;
 
     let rotation = 0;
-    const rotationTotal = 200;
+    const rotationTotal = 140;
 
     const segment_size = 360 / data.length;
     let winner_angle =
@@ -231,5 +231,5 @@ module.exports.createGIF = async (data) => {
     const buffer = encoder.out.getData();
 
     const reversedBuffer = await gifken.reverse(buffer);
-    return reversedBuffer;
+    return Buffer.from(reversedBuffer);
 }
