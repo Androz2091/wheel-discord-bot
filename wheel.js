@@ -31,8 +31,15 @@ module.exports.createSpinWheel = async (
     ctx.strokeStyle = "black";
     ctx.stroke();
 
+    // this is the angle for each item
     const angle = (2 * Math.PI) / data.length;
-    let startAngle = -Math.PI / 2;
+
+    const winnerItem = data.find((i) => i.winner);
+    const beforeArray = data.slice(0, data.indexOf(winnerItem));
+    const afterArray = data.slice(data.indexOf(winnerItem) + 1);
+    data = [winnerItem, ...afterArray, ...beforeArray];
+
+    let startAngle = -angle/2;
     let endAngle = startAngle + angle;
     for (let i = 0; i < data.length; i++) {
         const { color, label } = data[i];
@@ -84,6 +91,7 @@ module.exports.createSpinWheel = async (
         // Update the angles
         startAngle = endAngle;
         endAngle = startAngle + angle;
+        console.log(`start: ${startAngle} end: ${endAngle}`)
     }
 
     ctx.beginPath();
@@ -114,13 +122,10 @@ module.exports.createGIF = async (data) => {
     const winner = data[winnerIndex];
     const itemsBeforeWinner = data.slice(0, winnerIndex);
     const itemsAfterWinner = data.slice(winnerIndex + 1);
-    data.sort((a, b) => (a.winner ? -1 : 1));
+    
+    const items = [winner, ...itemsAfterWinner, ...itemsBeforeWinner];
 
-    const spinwheel = await module.exports.createSpinWheel([
-        winner,
-        ...itemsAfterWinner,
-        ...itemsBeforeWinner,
-    ], true);
+    const spinwheel = await module.exports.createSpinWheel(items, true);
 
     const canvas = createCanvas(500, 500);
     const ctx = canvas.getContext("2d");
@@ -146,10 +151,11 @@ module.exports.createGIF = async (data) => {
         join(__dirname, "assets", "pointer.png")
     );
 
-    const drawWheel = async (startAngle, i) => {
+    const drawWheel = async (angleInDegree, i) => {
+
         ctx.save();
         ctx.translate(centerX, centerY);
-        ctx.rotate((startAngle * Math.PI) / 180);
+        ctx.rotate((angleInDegree * Math.PI) / 180);
         ctx.drawImage(spinwheel, -centerX, -centerY, 500, 500);
         ctx.restore();
 
@@ -179,15 +185,18 @@ module.exports.createGIF = async (data) => {
         // Draw the pointer
         ctx.save();
         ctx.translate(250, 250);
-        ctx.rotate((-30 * Math.PI) / 180);
+        ctx.rotate(Math.PI/2);
         ctx.drawImage(pointer, -25, -240, 50, 50);
         ctx.restore();
 
     };
 
-    // rotate the wheel and then slow down
-    let angle_inc = 10;
-    let startAngle = 0;
+    let rotationAngleInDegree = 0;
+    let rotationAngleIncreaseInDegree = 0.01;
+
+    let rotation = 0;
+    const rotationTotal = 200;
+
     const segment_size = 360 / data.length;
     let winner_angle =
         360 * 2 - (data.length <= 5 ? segment_size / 2 : segment_size);
@@ -196,38 +205,30 @@ module.exports.createGIF = async (data) => {
     console.log(data);
     console.log(`Winner Angle: ${winner_angle}`);
     let i = 0;
-    while (startAngle < winner_angle) {
-        if (
-            winner_angle - startAngle <
-            segment_size * 0.5 * (data.length <= 5 ? 1 : 2)
-        ) {
-            break;
-        }
-
+    while (rotationTotal > rotation) {
         i += 1;
         console.log(
             `Frame ${i}`.padEnd(10),
             "|",
-            `Angle: ${startAngle}`.padEnd(27),
+            `Angle: ${rotationAngleInDegree}`.padEnd(27),
             "|",
-            `Angle Inc: ${angle_inc}`
+            `Angle Inc: ${rotationAngleIncreaseInDegree}`
         );
 
-        await drawWheel(startAngle); // await drawWheel(startAngle, i);
+        await drawWheel(rotationAngleInDegree);
         encoder.addFrame(ctx);
 
-        if ((winner_angle - startAngle) / angle_inc < 40) {
-            angle_inc *= 0.95;
-        } else if ((winner_angle - startAngle) / angle_inc < 20) {
-            angle_inc *= 0.9999;
-        }
+        rotationAngleInDegree += rotationAngleIncreaseInDegree;
+        rotationAngleIncreaseInDegree *= 1.1;
 
-        startAngle += angle_inc;
+        rotation++;
     }
     encoder.setDelay(3000);
     encoder.addFrame(ctx);
 
     encoder.finish();
     const buffer = encoder.out.getData();
-    return buffer;
+
+    const reversedBuffer = await gifken.reverse(buffer);
+    return reversedBuffer;
 }
