@@ -2,7 +2,8 @@ const { join } = require('path');
 const { Canvas, createCanvas, loadImage, registerFont } = require('canvas');
 // @ts-ignore
 const GIFEncoder = require("gif-encoder-2");
-const gifken = require('gifken')
+const gifken = require('gifken');
+const { writeFileSync } = require('fs');
 
 registerFont(join(__dirname, "assets", "Poppins", "Poppins-Bold.ttf"), {
     family: "PoppinsBold",
@@ -12,16 +13,13 @@ registerFont(join(__dirname, "assets", "Poppins", "Poppins-Regular.ttf"), {
     family: "PoppinsReg",
 });
 
-const createClickImage = () => {
+const createClickImage = async () => {
     const canvas = createCanvas(500, 500);
     const ctx = canvas.getContext("2d");
+    
+    const image = await loadImage(join(__dirname, "assets", "first-frame.png"));
 
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "white";
-    ctx.font = "30px PoppinsBold";
-    ctx.fillText("Click to view again", 50, 50);
+    ctx.drawImage(image, 0, 0, 500, 500);
 
     return ctx;
 }
@@ -241,7 +239,7 @@ module.exports.createGIF = async (data) => {
         rotation++;
     }
     encoder.addFrame(ctx);
-    encoder.addFrame(createClickImage());
+    encoder.addFrame(await createClickImage());
 
     encoder.finish();
     const buffer = encoder.out.getData();
