@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const { createGIF } = require('./wheel');
 
 const client = new Discord.Client({
-    intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates, Discord.IntentsBitField.Flags.GuildPresences]
+    intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.GuildMembers]
 });
 
 client.on('ready', () => {
