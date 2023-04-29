@@ -32,6 +32,10 @@ const commands = [
     {
         name: 'wheel-voice',
         description: 'Spin the wheel with voice!'
+    },
+    {
+        name: 'wheel-members',
+        description: 'Spin the wheel using online members'
     }
 ];
 

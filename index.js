@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const { createGIF } = require('./wheel');
 
 const client = new Discord.Client({
-    intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates]
+    intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates, Discord.IntentsBitField.Flags.GuildPresences]
 });
 
 client.on('ready', () => {
@@ -113,6 +113,51 @@ client.on('interactionCreate', async (interaction) => {
                 setTimeout(() => {
                     interaction.editReply({
                         content: `The winner is **${winnerOption.label}**!`
+                    });
+                }, 5000);
+
+            })
+
+        }
+
+        if (interaction.commandName === 'wheel-members') {
+
+            await interaction.guild.members.fetch();
+
+            const colorsGradient = [
+                '#524135',
+                '#8c643c',
+                '#a07955',
+                '#c49c6c',
+                '#bc966c'
+            ];
+            const options = interaction.guild.members.cache.filter((m) => m.presence.status !== 'invisible').map((opt, idx) => ({
+                label: opt.user.username,
+                color: colorsGradient[idx % colorsGradient.length]
+            }));
+
+            const winnerOption = options[Math.floor(Math.random() * options.length)];
+            const winnerIndex = options.indexOf(winnerOption);
+            options[winnerIndex] = {
+                ...winnerOption,
+                winner: true
+            };
+
+            await interaction.reply(`Generating wheel with ${options.length} options...`);
+            
+            createGIF(options).then(async (gif) => {
+
+                // send
+                await interaction.editReply({
+                    files: [{
+                        attachment: gif,
+                        name: 'wheel.gif'
+                    }]
+                });
+
+                setTimeout(() => {
+                    interaction.editReply({
+                        content: `**THE WINNER IS ${winnerOption.label.toUpperCase()}**!`
                     });
                 }, 5000);
 

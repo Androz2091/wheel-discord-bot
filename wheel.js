@@ -91,13 +91,13 @@ module.exports.createSpinWheel = async (
             .substring(1)
             .match(/.{2}/g)
             ?.map((x) => parseInt(x, 16));
-        if (r * 0.299 + g * 0.587 + b * 0.114 > 186) {
+        if (r * 0.299 + g * 0.587 + b * 0.114 > 130) {
             ctx.fillStyle = "black";
         } else ctx.fillStyle = "white";
-        ctx.font = "23px PoppinsBold";
+        ctx.font = "23px PoppinsReg";
         let textWidth = ctx.measureText(label).width;
         while (textWidth > radius * 0.65) {
-            ctx.font = `${parseInt(ctx.font) - 1}px PoppinsBold`;
+            ctx.font = `${parseInt(ctx.font) - 1}px PoppinsReg`;
             textWidth = ctx.measureText(label).width;
         }
         ctx.fillText(label, radius / 3, 10);
