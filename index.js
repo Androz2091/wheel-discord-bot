@@ -120,7 +120,7 @@ client.on('interactionCreate', async (interaction) => {
 
         }
 
-        if (interaction.commandName === 'wheel-members') {
+        if (interaction.commandName === 'wheel-members-online') {
 
             await interaction.guild.members.fetch({
                 withPresences: true
@@ -134,6 +134,53 @@ client.on('interactionCreate', async (interaction) => {
                 '#bc966c'
             ];
             const options = interaction.guild.members.cache.filter((m) => m.presence && m.presence?.status !== 'invisible').map((opt, idx) => ({
+                label: opt.user.username,
+                color: colorsGradient[idx % colorsGradient.length]
+            }));
+
+            const winnerOption = options[Math.floor(Math.random() * options.length)];
+            const winnerIndex = options.indexOf(winnerOption);
+            options[winnerIndex] = {
+                ...winnerOption,
+                winner: true
+            };
+
+            await interaction.reply(`Generating wheel with ${options.length} options...`);
+            
+            createGIF(options).then(async (gif) => {
+
+                // send
+                await interaction.editReply({
+                    files: [{
+                        attachment: gif,
+                        name: 'wheel.gif'
+                    }]
+                });
+
+                setTimeout(() => {
+                    interaction.editReply({
+                        content: `**THE WINNER IS ${winnerOption.label.toUpperCase()}**!`
+                    });
+                }, 5000);
+
+            })
+
+        }
+
+        if (interaction.commandName === 'wheel-members-online-role') {
+
+            await interaction.guild.members.fetch({
+                withPresences: true
+            });
+
+            const colorsGradient = [
+                '#524135',
+                '#8c643c',
+                '#a07955',
+                '#c49c6c',
+                '#bc966c'
+            ];
+            const options = interaction.guild.members.cache.filter((m) => m.roles.cache.has('1029342182613725246')).map((opt, idx) => ({
                 label: opt.user.username,
                 color: colorsGradient[idx % colorsGradient.length]
             }));
