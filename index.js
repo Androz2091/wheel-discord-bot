@@ -122,7 +122,9 @@ client.on('interactionCreate', async (interaction) => {
 
         if (interaction.commandName === 'wheel-members') {
 
-            await interaction.guild.members.fetch();
+            await interaction.guild.members.fetch({
+                withPresences: true
+            });
 
             const colorsGradient = [
                 '#524135',
