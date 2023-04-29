@@ -131,7 +131,7 @@ client.on('interactionCreate', async (interaction) => {
                 '#c49c6c',
                 '#bc966c'
             ];
-            const options = interaction.guild.members.cache.filter((m) => m.presence.status !== 'invisible').map((opt, idx) => ({
+            const options = interaction.guild.members.cache.filter((m) => m.presence?.status !== 'invisible').map((opt, idx) => ({
                 label: opt.user.username,
                 color: colorsGradient[idx % colorsGradient.length]
             }));
