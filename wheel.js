@@ -12,6 +12,20 @@ registerFont(join(__dirname, "assets", "Poppins", "Poppins-Regular.ttf"), {
     family: "PoppinsReg",
 });
 
+const createClickImage = () => {
+    const canvas = createCanvas(500, 500);
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.font = "30px PoppinsBold";
+    ctx.fillText("Click to view again", 50, 50);
+
+    return ctx;
+}
+
 module.exports.createSpinWheel = async (
     data,
     returnCanvas
@@ -217,6 +231,8 @@ module.exports.createGIF = async (data) => {
         );
 
         await drawWheel(rotationAngleInDegree);
+        if (rotation === 0) encoder.setDelay(3000);
+        else encoder.setDelay(24);
         encoder.addFrame(ctx);
 
         rotationAngleInDegree += rotationAngleIncreaseInDegree;
@@ -224,8 +240,8 @@ module.exports.createGIF = async (data) => {
 
         rotation++;
     }
-    encoder.setDelay(3000);
     encoder.addFrame(ctx);
+    encoder.addFrame(createClickImage());
 
     encoder.finish();
     const buffer = encoder.out.getData();
