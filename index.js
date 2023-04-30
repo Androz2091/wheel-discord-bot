@@ -180,7 +180,7 @@ client.on('interactionCreate', async (interaction) => {
                 '#c49c6c',
                 '#bc966c'
             ];
-            const options = interaction.guild.members.cache.filter((m) => m.roles.cache.has('1029342182613725246')).map((opt, idx) => ({
+            const options = interaction.guild.members.cache.filter((m) => m.roles.cache.has('1029342182613725246') && !m.user.bot).map((opt, idx) => ({
                 label: opt.user.username,
                 color: colorsGradient[idx % colorsGradient.length]
             }));
