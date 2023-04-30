@@ -27,7 +27,7 @@ client.on('interactionCreate', async (interaction) => {
             const users = [];
             for (const reaction of reactions.values()) {
                 await reaction.users.fetch();
-                users.push(reaction.users.cache.toJSON());
+                users.push(reaction.users.cache.filter((u) => !u.bot).toJSON());
             }
             console.log(users, users.flat());
 
@@ -86,7 +86,7 @@ client.on('interactionCreate', async (interaction) => {
                 '#c49c6c',
                 '#bc966c'
             ];
-            const options = voiceMembers.map((opt, idx) => ({
+            const options = voiceMembers.filter((m) => !m.user.bot).map((opt, idx) => ({
                 label: opt.user?.username,
                 color: colorsGradient[idx % colorsGradient.length]
             }));
@@ -133,7 +133,7 @@ client.on('interactionCreate', async (interaction) => {
                 '#c49c6c',
                 '#bc966c'
             ];
-            const options = interaction.guild.members.cache.filter((m) => m.presence && m.presence?.status !== 'invisible').map((opt, idx) => ({
+            const options = interaction.guild.members.cache.filter((m) => m.presence && m.presence?.status !== 'invisible' && !m.user.bot) .map((opt, idx) => ({
                 label: opt.user.username,
                 color: colorsGradient[idx % colorsGradient.length]
             }));
