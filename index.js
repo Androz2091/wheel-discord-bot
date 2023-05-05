@@ -22,6 +22,8 @@ client.on('interactionCreate', async (interaction) => {
 
             console.log(messageId, channelId);
 
+            await interaction.deferReply();
+
             const msg = await client.channels.cache.get(channelId).messages.fetch(messageId);
             const reactions = msg.reactions.cache;
             const users = [];
@@ -50,7 +52,7 @@ client.on('interactionCreate', async (interaction) => {
                 winner: true
             };
 
-            await interaction.reply(`Generating wheel with ${options.length} options...`);
+            await interaction.followUp(`Generating wheel with ${options.length} options...`);
             
             createGIF(options).then(async (gif) => {
 
