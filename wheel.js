@@ -193,7 +193,7 @@ module.exports.createGIF = async (data) => {
         // write text at bottom right
         ctx.font = '20px PoppinsReg';
         ctx.fillStyle = "white";
-        ctx.fillText("mydiscordchat.com", 325, 480);
+        ctx.fillText("mydiscordchat.com", 300, 480);
 
         // Draw the pointer
         ctx.save();
