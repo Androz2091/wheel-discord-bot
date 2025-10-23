@@ -16,7 +16,7 @@ registerFont(join(__dirname, "assets", "Poppins", "Poppins-Regular.ttf"), {
 const createClickImage = async () => {
     const canvas = createCanvas(500, 500);
     const ctx = canvas.getContext("2d");
-    
+
     const image = await loadImage(join(__dirname, "assets", "first-frame.png"));
 
     ctx.drawImage(image, 0, 0, 500, 500);
@@ -135,7 +135,7 @@ module.exports.createGIF = async (data) => {
     const winner = data[winnerIndex];
     const itemsBeforeWinner = data.slice(0, winnerIndex);
     const itemsAfterWinner = data.slice(winnerIndex + 1);
-    
+
     const items = [winner, ...itemsAfterWinner, ...itemsBeforeWinner];
 
     const spinwheel = await module.exports.createSpinWheel(items, true);
@@ -193,7 +193,7 @@ module.exports.createGIF = async (data) => {
         // write text at bottom right
         ctx.font = '20px PoppinsReg';
         ctx.fillStyle = "white";
-        ctx.fillText("mycpcchat.com", 325, 480);
+        ctx.fillText("mydiscordchat.com", 325, 480);
 
         // Draw the pointer
         ctx.save();
