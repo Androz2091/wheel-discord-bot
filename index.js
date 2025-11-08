@@ -4,6 +4,18 @@ const Discord = require('discord.js');
 const { createGIF } = require('./wheel');
 
 const
+    data = await (async () => {
+        try {
+            return await Bun.file('./data.json').json();
+        }
+        catch {
+            return {};
+        }
+    })(),
+    setData = async dataChunk => {
+        Object.assign(data, dataChunk);
+        await Bun.write('./data.json', JSON.stringify(data, null, 4));
+    },
     COLORS_GRADIENT = [
         '#524135',
         '#8c643c',
