@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const Discord = require('discord.js');
 const { createGIF } = require('./wheel');
+const dayjs = require('dayjs');
+
+dayjs.extend(require('dayjs/plugin/duration'));
 
 const
     data = await (async () => {
@@ -48,10 +51,6 @@ const
 
 const client = new Discord.Client({
     intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.GuildMembers]
-});
-
-client.on('ready', () => {
-    console.log('I am ready!');
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -145,4 +144,49 @@ client.on('interactionCreate', async (interaction) => {
 
 });
 
-client.login(process.env.DISCORD_BOT_TOKEN);
+await Promise.all([
+    client.login(process.env.DISCORD_BOT_TOKEN),
+    new Promise(resolve => client.once('ready', resolve))
+]);
+
+console.log('I am ready!');
+
+(async function scheduleLoop(){
+    const now = dayjs();
+    if(!Array.isArray(data.schedule) || !data.schedule.length) return setTimeout(scheduleLoop, 1000);
+    for(const item of data.schedule){
+        const startDate = dayjs(item.startTimestamp);
+        if(
+            !item.isEnabled // is disabled
+            ||
+            now.isBefore(startDate) // start time is not reached
+        ) break;
+        const hasBeenRun = !isNaN(parseInt(item.lastRunStartTimestamp));
+        if(hasBeenRun){
+            const endDate = dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.runDuration));
+            if(
+                now.isAfter(endDate) // is expired
+                &&
+                (
+                    isNaN(parseInt(item.lastRunEndTimestamp)) // has not been ended
+                    ||
+                    dayjs(item.lastRunEndTimestamp).isBefore(endDate) // has been ended only during a previous run
+                )
+            ){
+                item.lastRunEndTimestamp = now.valueOf();
+                console.log(new Date().toISOString(), 'End'); // TODO
+                break;
+            }
+        }
+        if(
+            !item.duration && !item.interval && hasBeenRun // has no duration/interval and has been run
+            ||
+            !!item.duration && now.isAfter(startDate.add(dayjs.duration(item.duration))) // duration elapsed
+            ||
+            !!item.interval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.interval))) // interval not elapsed
+        ) break;
+        item.lastRunStartTimestamp = now.valueOf();
+        console.log(new Date().toISOString(), 'Start'); // TODO
+    }
+    setTimeout(scheduleLoop, 1000);
+})();
