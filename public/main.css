@@ -1,0 +1,60 @@
+.modal {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ToastContainer {
+    margin: 0;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    list-style: none;
+}
+
+.ToastContainer__toast {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+.ToastContainer__toast__header,
+.ToastContainer__toast__body {
+    margin: 0;
+    padding: 0;
+}
+
+.ToastContainer__toast__header__title {
+    margin-right: auto;
+}
+
+.Header {
+    border-bottom: var(--bs-border-width) solid var(--bs-content-border-color);
+    padding: 0.5rem 1rem;
+    display: flex;
+    column-gap: 0.5rem;
+}
+
+.Header__heading {
+    margin: 0;
+    flex: 2;
+    cursor: default;
+}
+
+.Header__form {
+    flex: 1;
+}
+
+.Main {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+.Main__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
