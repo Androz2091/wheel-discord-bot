@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import dayjsDuration from 'dayjs/plugin/duration';
 
 import { createGIF } from './wheel.js';
+import { initFastify } from './fastify.js';
 
 dayjs.extend(dayjsDuration);
 
@@ -190,3 +191,13 @@ console.log('I am ready!');
     }
     setTimeout(scheduleLoop, 1000);
 })();
+
+if(process.env.FASTIFY_PORT && process.env.FASTIFY_API_KEY){
+    await initFastify({
+        apiKey: process.env.FASTIFY_API_KEY,
+        port: process.env.FASTIFY_PORT,
+        getData: () => JSON.parse(JSON.stringify(data)),
+        setData
+    });
+    console.log(`Fastify server listening to http://localhost:${process.env.FASTIFY_PORT}`);
+}
