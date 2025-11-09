@@ -1,15 +1,19 @@
 {
-  "name": "wheel-discord-bot",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/Androz2091/wheel-discord-bot.git",
-  "author": "Androz2091 <androz2091@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "canvas": "^3.2.0",
-    "dayjs": "^1.11.19",
-    "discord.js": "^14.9.0",
-    "gif-encoder-2": "^1.0.5",
-    "gifken": "^3.0.4"
-  }
+    "name": "wheel-discord-bot",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/Androz2091/wheel-discord-bot.git",
+    "author": "Androz2091 <androz2091@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "canvas": "^3.2.0",
+        "dayjs": "^1.11.19",
+        "discord.js": "^14.9.0",
+        "gif-encoder-2": "^1.0.5",
+        "gifken": "^3.0.4"
+    },
+    "scripts": {
+        "deploy": "bun deploy.js",
+        "start": "bun index.js"
+    }
 }
