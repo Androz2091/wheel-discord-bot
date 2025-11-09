@@ -1,6 +1,8 @@
-const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
-const fs = require('node:fs');
-const path = require('node:path');
+import {
+    REST,
+    Routes,
+    ApplicationCommandOptionType
+} from 'discord.js';
 
 const commands = [
     {

@@ -1,8 +1,10 @@
-const Discord = require('discord.js');
-const { createGIF } = require('./wheel');
-const dayjs = require('dayjs');
+import Discord from 'discord.js';
+import dayjs from 'dayjs';
+import dayjsDuration from 'dayjs/plugin/duration';
 
-dayjs.extend(require('dayjs/plugin/duration'));
+import { createGIF } from './wheel.js';
+
+dayjs.extend(dayjsDuration);
 
 const
     data = await (async () => {
