@@ -9,7 +9,6 @@
     "canvas": "^3.2.0",
     "dayjs": "^1.11.19",
     "discord.js": "^14.9.0",
-    "dotenv": "^16.0.3",
     "gif-encoder-2": "^1.0.5",
     "gifken": "^3.0.4"
   }

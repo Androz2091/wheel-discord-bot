@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const Discord = require('discord.js');
 const { createGIF } = require('./wheel');
 const dayjs = require('dayjs');
