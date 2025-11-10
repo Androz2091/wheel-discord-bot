@@ -17,7 +17,8 @@ const
         }
     })(),
     setData = async dataChunk => {
-        Object.assign(data, dataChunk);
+        if(dataChunk)
+            Object.assign(data, dataChunk);
         await Bun.write('./data.json', JSON.stringify(data, null, 4));
     },
     COLORS_GRADIENT = [
@@ -51,7 +52,9 @@ const
     };
 
 const client = new Discord.Client({
-    intents: [Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.GuildVoiceStates, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.GuildMembers]
+    intents: Object
+        .values(Discord.IntentsBitField.Flags)
+        .filter(_ => typeof _ === 'number'),
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -175,7 +178,42 @@ console.log('I am ready!');
                 )
             ){
                 item.lastRunEndTimestamp = now.valueOf();
-                console.log(new Date().toISOString(), 'End'); // TODO
+                const
+                    message = await Promise
+                        .resolve(process.env.DISCORD_CHANNEL_ID)
+                        .then(_ => client.channels.cache.get(_))
+                        .then(channel => channel.messages.fetch(item.lastRunMessageId)),
+                    options = await Promise
+                        .resolve(message)
+                        .then(message => [...message.reactions.cache.values()])
+                        .then(reactions => reactions.flatMap(reaction => reaction.users.cache.filter(user => !user.bot).toJSON()))
+                        .then(users => users.map(user => user.username))
+                        .then(usernames => usernames.map(
+                            (
+                                username,
+                                index
+                            ) => ({
+                                label: username,
+                                color: getColorByIndex(index)
+                            })
+                        ));
+                if(!options.length) continue;
+                const winnerOption = options[Math.floor(Math.random() * options.length)];
+                winnerOption.winner = true;
+                const [
+                    winnerMessage,
+                    gif
+                ] = await Promise.all([
+                    message.reply(`Generating wheel with ${options.length} options...`),
+                    createGIF(options)
+                ]);
+                await winnerMessage.edit({
+                    content: `The winner is **${winnerOption.label}**!`,
+                    files: [{
+                        attachment: gif,
+                        name: 'wheel.gif'
+                    }]
+                });
                 break;
             }
         }
@@ -187,8 +225,9 @@ console.log('I am ready!');
             !!item.interval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.interval))) // interval not elapsed
         ) break;
         item.lastRunStartTimestamp = now.valueOf();
-        console.log(new Date().toISOString(), 'Start'); // TODO
+        item.lastRunMessageId = (await client.channels.cache.get(process.env.DISCORD_CHANNEL_ID).send(item.messageContent)).id;
     }
+    await setData();
     setTimeout(scheduleLoop, 1000);
 })();
 
