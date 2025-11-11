@@ -156,8 +156,9 @@ await Promise.all([
 console.log('I am ready!');
 
 (async function scheduleLoop(){
-    const now = dayjs();
     if(!Array.isArray(data.schedule) || !data.schedule.length) return setTimeout(scheduleLoop, 1000);
+    const now = dayjs();
+    let isDataUpdated = false;
     for(const item of data.schedule){
         const startDate = dayjs(item.startTimestamp);
         if(
@@ -177,6 +178,7 @@ console.log('I am ready!');
                     dayjs(item.lastRunEndTimestamp).isBefore(endDate) // has been ended only during a previous run
                 )
             ){
+                isDataUpdated = true;
                 item.lastRunEndTimestamp = now.valueOf();
                 const
                     message = await Promise
@@ -224,10 +226,12 @@ console.log('I am ready!');
             ||
             !!item.interval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.interval))) // interval not elapsed
         ) break;
+        isDataUpdated = true;
         item.lastRunStartTimestamp = now.valueOf();
         item.lastRunMessageId = (await client.channels.cache.get(process.env.DISCORD_CHANNEL_ID).send(item.messageContent)).id;
     }
-    await setData();
+    if(isDataUpdated)
+        await setData();
     setTimeout(scheduleLoop, 1000);
 })();
 
