@@ -43,7 +43,7 @@ export const initFastify = async ({
                 ...request.body,
                 id: Bun.randomUUIDv7()
             });
-            setData({ schedule });
+            await setData({ schedule });
             reply.code(201).send();
         }
     );
@@ -66,7 +66,7 @@ export const initFastify = async ({
                 { schedule } = getData(),
                 itemIndex = schedule.findIndex(item => item.id === request.params.id);
             Object.assign(schedule[itemIndex], request.body);
-            setData({ schedule });
+            await setData({ schedule });
             reply.code(204).send();
         }
     );
@@ -80,7 +80,7 @@ export const initFastify = async ({
                 { schedule } = getData(),
                 itemIndex = schedule.findIndex(item => item.id === request.params.id);
             schedule.splice(itemIndex, 1);
-            setData({ schedule });
+            await setData({ schedule });
             reply.code(204).send();
         }
     );
