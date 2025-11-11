@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import Discord from 'discord.js';
 import dayjs from 'dayjs';
 import dayjsDuration from 'dayjs/plugin/duration';
@@ -8,9 +9,50 @@ import { initFastify } from './fastify.js';
 dayjs.extend(dayjsDuration);
 
 const
+    validateData = data => {
+        const durationSchema = Joi.object({
+            years: Joi.number().integer().min(0),
+            months: Joi.number().integer().min(0),
+            days: Joi.number().integer().min(0),
+            hours: Joi.number().integer().min(0),
+            minutes: Joi.number().integer().min(0),
+            seconds: Joi.number().integer().min(0)
+        });
+        Joi.assert(
+            data,
+            Joi.object({
+                schedule: Joi
+                    .array()
+                    .items(
+                        Joi.object({
+                            id: Joi
+                                .string()
+                                .uuid({
+                                    version: 'uuidv7'
+                                })
+                                .required(),
+                            startTimestamp: Joi.number().required(),
+                            isEnabled: Joi.boolean().required(),
+                            lastRunStartTimestamp: Joi.number().allow(null),
+                            runDuration: durationSchema,
+                            lastRunEndTimestamp: Joi.number().allow(null),
+                            duration: durationSchema.allow(null),
+                            interval: durationSchema.allow(null),
+                            messageContent: Joi.string().required(),
+                            lastRunMessageId: Joi.string().allow(null)
+                        })
+                    )
+                    .required()
+            })
+        );
+    },
     data = await (async () => {
         try {
-            return await Bun.file('./data.json').json();
+            const file = Bun.file('./data.json');
+            const result = await file.json();
+            await Bun.write('./data.bak.json', file);
+            validateData(result);
+            return result;
         }
         catch {
             return {};
@@ -19,6 +61,7 @@ const
     setData = async dataChunk => {
         if(dataChunk)
             Object.assign(data, dataChunk);
+        validateData(data);
         await Bun.write('./data.json', JSON.stringify(data, null, 4));
     },
     COLORS_GRADIENT = [

@@ -13,7 +13,8 @@
         "discord.js": "^14.9.0",
         "fastify": "^5.6.2",
         "gif-encoder-2": "^1.0.5",
-        "gifken": "^3.0.4"
+        "gifken": "^3.0.4",
+        "joi": "^18.0.1"
     },
     "scripts": {
         "deploy": "bun deploy.js",
