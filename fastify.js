@@ -53,7 +53,7 @@ export const initFastify = async ({
             request,
             reply
         ) => {
-            reply.send(getData());
+            reply.send(getData().schedule);
         }
     );
     fastify.patch(
