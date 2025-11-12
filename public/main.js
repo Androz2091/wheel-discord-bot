@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import dayjsPluginDuration from 'dayjsPluginDuration';
 import dayjsPluginRelativeTime from 'dayjsPluginRelativeTime';
 import dayjsPluginLocalizedFormat from 'dayjsPluginLocalizedFormat';
+import humanize from 'humanize-duration';
 
 dayjs.extend(dayjsPluginDuration);
 dayjs.extend(dayjsPluginRelativeTime);
@@ -382,6 +383,7 @@ const
         }),
         computed: {
             emitter: () => emitter,
+            humanize: () => humanize,
             dayjs: () => dayjs
         },
         methods: {
@@ -461,16 +463,16 @@ const
                                 >{{ item.messageContent }}</td>
                                 <td
                                     class="Main__schedule__item__runDuration"
-                                >{{ dayjs.duration(item.runDuration).humanize() }}</td>
+                                >{{ humanize(dayjs.duration(item.runDuration).valueOf()) }}</td>
                                 <td
                                     class="Main__schedule__item__startDate"
                                 >{{ dayjs(item.startTimestamp).format('lll') }}</td>
                                 <td
                                     class="Main__schedule__item__interval"
-                                >{{ dayjs.duration(item.interval).valueOf() ? dayjs.duration(item.interval).humanize() : '-' }}</td>
+                                >{{ dayjs.duration(item.interval).valueOf() ? humanize(dayjs.duration(item.interval).valueOf()) : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__duration"
-                                >{{ dayjs.duration(item.interval).valueOf() ? dayjs.duration(item.duration).humanize() : '-' }}</td>
+                                >{{ dayjs.duration(item.interval).valueOf() ? humanize(dayjs.duration(item.interval).valueOf()) : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__actions"
                                 >
