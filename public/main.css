@@ -3,6 +3,20 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.durationInput {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    row-gap: 0.25rem;
+}
+
+.durationInput__input {
+    width: inherit !important;
+}
+
+.durationInput .input-group:not(:nth-child(3n+1)) .durationInput__label {
+    margin-left: 0.25rem;
+}
+
 .ToastContainer {
     margin: 0;
     padding: 1rem;
@@ -57,4 +71,51 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.Main__schedule--container {
+    overflow-x: auto;
+    padding-bottom: 8rem;
+    margin-bottom: -8rem;
+}
+
+.Main__schedule {
+    width: 100%;
+}
+
+.Main__schedule__item__runDuration,
+.Main__schedule__item__startDate,
+.Main__schedule__item__interval,
+.Main__schedule__item__duration {
+    white-space: nowrap;
+}
+
+.Main__schedule__item__content {
+    min-width: 300px;
+    word-break: break-all;
+}
+
+.Main__schedule__item__actions {
+    position: relative;
+}
+
+.Main__schedule__item__actions__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 0.5rem;
+}
+
+.Main__schedule__item__actions__deletionConfirmation {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    max-width: inherit;
+    width: max-content;
+}
+
+.EditItem__form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
 }
