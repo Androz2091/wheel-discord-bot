@@ -259,12 +259,17 @@ console.log('I am ready!');
                 continue;
             }
         }
+        const
+            duration = dayjs.duration(item.duration),
+            hasDuration = !!duration.valueOf(),
+            interval = dayjs.duration(item.interval),
+            hasInterval = !!interval.valueOf();
         if(
-            !item.duration && !item.interval && hasBeenRun // has no duration/interval and has been run
+            !hasDuration && !hasInterval && hasBeenRun // has no duration/interval and has been run
             ||
-            !!item.duration && now.isAfter(startDate.add(dayjs.duration(item.duration))) // duration elapsed
+            hasDuration && now.isAfter(startDate.add(duration)) // duration elapsed
             ||
-            !!item.interval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.interval))) // interval not elapsed
+            hasInterval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(interval)) // interval not elapsed
         ) continue;
         isDataUpdated = true;
         item.lastRunStartTimestamp = now.valueOf();

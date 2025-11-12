@@ -452,10 +452,10 @@ const
                                 >{{ dayjs(item.startTimestamp).format('lll') }}</td>
                                 <td
                                     class="Main__schedule__item__interval"
-                                >{{ item.interval ? dayjs.duration(item.interval).humanize() : '-' }}</td>
+                                >{{ dayjs.duration(item.interval).valueOf() ? dayjs.duration(item.interval).humanize() : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__duration"
-                                >{{ item.duration ? dayjs.duration(item.duration).humanize() : '-' }}</td>
+                                >{{ dayjs.duration(item.interval).valueOf() ? dayjs.duration(item.duration).humanize() : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__actions"
                                 >
