@@ -44,7 +44,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, years: value }
+                        { ...this.modelValue, years: value || undefined }
                     );
                 }
             },
@@ -55,7 +55,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, months: value }
+                        { ...this.modelValue, months: value || undefined }
                     );
                 }
             },
@@ -66,7 +66,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, days: value }
+                        { ...this.modelValue, days: value || undefined }
                     );
                 }
             },
@@ -77,7 +77,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, hours: value }
+                        { ...this.modelValue, hours: value || undefined }
                     );
                 }
             },
@@ -88,7 +88,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, minutes: value }
+                        { ...this.modelValue, minutes: value || undefined }
                     );
                 }
             },
@@ -99,7 +99,7 @@ const
                 set: function(value){
                     this.$emit(
                         'update:modelValue',
-                        { ...this.modelValue, seconds: value }
+                        { ...this.modelValue, seconds: value || undefined }
                     );
                 }
             }
@@ -243,7 +243,7 @@ const
             }
         },
         beforeMount: function(){
-            this.isEnabledInput = this.item.isEnabled;
+            this.isEnabledInput = this.item.isEnabled || false;
             this.messageContentInput = this.item.messageContent;
             this.runDurationInput = this.item.runDuration || {};
             this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm');
