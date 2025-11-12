@@ -86,7 +86,8 @@
 .Main__schedule__item__runDuration,
 .Main__schedule__item__startDate,
 .Main__schedule__item__interval,
-.Main__schedule__item__duration {
+.Main__schedule__item__duration,
+.Main__schedule__item__lastRunDate {
     white-space: nowrap;
 }
 

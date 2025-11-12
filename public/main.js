@@ -447,6 +447,7 @@ const
                             <th>Start date</th>
                             <th>Interval</th>
                             <th>Duration</th>
+                            <th>Last run date</th>
                             <th></th>
                         </tr></thead>
                         <tbody>
@@ -473,6 +474,9 @@ const
                                 <td
                                     class="Main__schedule__item__duration"
                                 >{{ dayjs.duration(item.interval).valueOf() ? humanize(dayjs.duration(item.interval).valueOf()) : '-' }}</td>
+                                <td
+                                    class="Main__schedule__item__lastRunDate"
+                                >{{ item.lastRunStartTimestamp ? dayjs(item.lastRunStartTimestamp).format('lll') : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__actions"
                                 >
