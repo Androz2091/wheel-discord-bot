@@ -220,25 +220,29 @@ console.log('I am ready!');
             ){
                 isDataUpdated = true;
                 item.lastRunEndTimestamp = now.valueOf();
-                const
+                let message;
+                try {
                     message = await Promise
                         .resolve(process.env.DISCORD_CHANNEL_ID)
                         .then(_ => client.channels.cache.get(_))
-                        .then(channel => channel.messages.fetch(item.lastRunMessageId)),
-                    options = await Promise
-                        .resolve(message)
-                        .then(message => [...message.reactions.cache.values()])
-                        .then(reactions => reactions.flatMap(reaction => reaction.users.cache.filter(user => !user.bot).toJSON()))
-                        .then(users => users.map(user => user.username))
-                        .then(usernames => usernames.map(
-                            (
-                                username,
-                                index
-                            ) => ({
-                                label: username,
-                                color: getColorByIndex(index)
-                            })
-                        ));
+                        .then(channel => channel.messages.fetch(item.lastRunMessageId));
+                }
+                catch {}
+                if(!message) continue;
+                const options = await Promise
+                    .resolve(message)
+                    .then(message => [...message.reactions.cache.values()])
+                    .then(reactions => reactions.flatMap(reaction => reaction.users.cache.filter(user => !user.bot).toJSON()))
+                    .then(users => users.map(user => user.username))
+                    .then(usernames => usernames.map(
+                        (
+                            username,
+                            index
+                        ) => ({
+                            label: username,
+                            color: getColorByIndex(index)
+                        })
+                    ));
                 if(!options.length) continue;
                 const winnerOption = options[Math.floor(Math.random() * options.length)];
                 winnerOption.winner = true;
