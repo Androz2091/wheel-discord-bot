@@ -205,7 +205,7 @@ console.log('I am ready!');
             !item.isEnabled // is disabled
             ||
             now.isBefore(startDate) // start time is not reached
-        ) break;
+        ) continue;
         const hasBeenRun = !isNaN(parseInt(item.lastRunStartTimestamp));
         if(hasBeenRun){
             const endDate = dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.runDuration));
@@ -256,7 +256,7 @@ console.log('I am ready!');
                         name: 'wheel.gif'
                     }]
                 });
-                break;
+                continue;
             }
         }
         if(
@@ -265,7 +265,7 @@ console.log('I am ready!');
             !!item.duration && now.isAfter(startDate.add(dayjs.duration(item.duration))) // duration elapsed
             ||
             !!item.interval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.interval))) // interval not elapsed
-        ) break;
+        ) continue;
         isDataUpdated = true;
         item.lastRunStartTimestamp = now.valueOf();
         item.lastRunMessageId = (await client.channels.cache.get(process.env.DISCORD_CHANNEL_ID).send(item.messageContent)).id;
