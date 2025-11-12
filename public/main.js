@@ -28,7 +28,8 @@ Sentry.init({
 const
     durationInput = defineComponent({
         props: [
-            'modelValue'
+            'modelValue',
+            'isInvalid'
         ],
         emits: [
             'update:modelValue'
@@ -116,6 +117,7 @@ const
                     >Years</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--years--' + uuid"
                         type="number"
                         min="0"
@@ -133,6 +135,7 @@ const
                     >Months</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--months--' + uuid"
                         type="number"
                         min="0"
@@ -150,6 +153,7 @@ const
                     >Days</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--days--' + uuid"
                         type="number"
                         min="0"
@@ -167,6 +171,7 @@ const
                     >Hours</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--hours--' + uuid"
                         type="number"
                         min="0"
@@ -184,6 +189,7 @@ const
                     >Minutes</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--minutes--' + uuid"
                         type="number"
                         min="0"
@@ -201,6 +207,7 @@ const
                     >Secs.</label>
                     <input
                         class="durationInput__input form-control"
+                        :class="{ 'is-invalid': isInvalid }"
                         :id="'durationInput__label--seconds--' + uuid"
                         type="number"
                         min="0"
@@ -227,10 +234,13 @@ const
             startTimestampInput: undefined,
             intervalInput: undefined,
             durationInput: undefined,
+            isRunDurationInvalid: false,
             isSaving: false
         }),
         methods: {
             onSubmit: async function(){
+                if(!dayjs.duration(this.runDurationInput).valueOf())
+                    return this.isRunDurationInvalid = true;
                 this.isSaving = true;
                 await this.save({
                     startTimestamp: dayjs(this.startTimestampInput).valueOf(),
@@ -249,6 +259,10 @@ const
             this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm');
             this.intervalInput = this.item.interval || {};
             this.durationInput = this.item.duration || {};
+            this.$watch(
+                () => this.runDurationInput,
+                () => this.isRunDurationInvalid = dayjs.duration(this.runDurationInput).valueOf() === 0
+            );
         },
         //language=Vue
         template: `
@@ -315,6 +329,7 @@ const
                     <span>Run duration</span>
                     <durationInput
                         v-model="runDurationInput"
+                        :is-invalid="isRunDurationInvalid"
                     />
                     <label style="display: contents">
                         <span>Start date</span>
