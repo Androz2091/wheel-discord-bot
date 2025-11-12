@@ -114,6 +114,10 @@
     width: max-content;
 }
 
+.Main__add {
+    align-self: end;
+}
+
 .EditItem__form {
     display: flex;
     flex-direction: column;

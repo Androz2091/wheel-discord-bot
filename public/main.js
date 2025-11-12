@@ -519,6 +519,13 @@ const
                             </tr>
                         </tbody>
                     </table></div>
+                    <button
+                        class="Main__add btn btn-primary"
+                        aria-label="Add message"
+                        @click="editingItem = {}"
+                    ><i
+                        class="ph ph-plus"
+                    ></i></button>
                 </template>
                 <EditItem
                     v-if="editingItem"
