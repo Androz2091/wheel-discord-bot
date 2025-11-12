@@ -18,9 +18,8 @@ const
             minutes: Joi.number().integer().min(0),
             seconds: Joi.number().integer().min(0)
         });
-        Joi.assert(
-            data,
-            Joi.object({
+        return Joi
+            .object({
                 schedule: Joi
                     .array()
                     .items(
@@ -33,35 +32,33 @@ const
                                 .required(),
                             startTimestamp: Joi.number().required(),
                             isEnabled: Joi.boolean().required(),
-                            lastRunStartTimestamp: Joi.number().allow(null),
+                            lastRunStartTimestamp: Joi.number().allow(null).default(null),
                             runDuration: durationSchema,
-                            lastRunEndTimestamp: Joi.number().allow(null),
-                            duration: durationSchema.allow(null),
-                            interval: durationSchema.allow(null),
+                            lastRunEndTimestamp: Joi.number().allow(null).default(null),
+                            duration: durationSchema.allow(null).default(null),
+                            interval: durationSchema.allow(null).default(null),
                             messageContent: Joi.string().required(),
-                            lastRunMessageId: Joi.string().allow(null)
+                            lastRunMessageId: Joi.string().allow(null).default(null)
                         })
                     )
                     .required()
             })
-        );
+            .validateAsync(data);
     },
     data = await (async () => {
         try {
             const file = Bun.file('./data.json');
             const result = await file.json();
             await Bun.write('./data.bak.json', file);
-            validateData(result);
-            return result;
+            return validateData(result);
         }
         catch {
             return {};
         }
     })(),
     setData = async dataChunk => {
-        if(dataChunk)
-            Object.assign(data, dataChunk);
-        validateData(data);
+        const tmpData = await validateData({ ...data, ...dataChunk });
+        Object.assign(data, tmpData);
         await Bun.write('./data.json', JSON.stringify(data, null, 4));
     },
     COLORS_GRADIENT = [
