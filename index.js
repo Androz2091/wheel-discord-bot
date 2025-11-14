@@ -233,7 +233,8 @@ console.log('I am ready!');
                     .resolve(message)
                     .then(message => [...message.reactions.cache.values()])
                     .then(reactions => reactions.flatMap(reaction => reaction.users.cache.filter(user => !user.bot).toJSON()))
-                    .then(users => users.map(user => user.username))
+                    .then(users => [...new Set(users.map(user => user.id))])
+                    .then(userIds => userIds.map(userId => message.guild.members.cache.get(userId).displayName))
                     .then(usernames => usernames.map(
                         (
                             username,
