@@ -53,7 +53,9 @@ const
             return validateData(result);
         }
         catch {
-            return {};
+            return {
+                schedule: []
+            };
         }
     })(),
     setData = async dataChunk => {
