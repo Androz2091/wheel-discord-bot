@@ -257,7 +257,7 @@ const
             this.isEnabledInput = this.item.isEnabled || false;
             this.messageContentInput = this.item.messageContent;
             this.runDurationInput = this.item.runDuration || {};
-            this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm');
+            this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm:ss');
             this.intervalInput = this.item.interval || {};
             this.durationInput = this.item.duration || {};
             this.$watch(
@@ -337,6 +337,7 @@ const
                         <input
                             type="datetime-local"
                             class="form-control"
+                            step="1"
                             v-model="startTimestampInput"
                         >
                     </label>
