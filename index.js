@@ -266,16 +266,21 @@ console.log('I am ready!');
             ||
             now.isBefore(startDate) // start time is not reached
         ) continue;
-        const hasBeenRun = !isNaN(parseInt(item.lastRunStartTimestamp));
+        const
+            hasBeenRun = !isNaN(parseInt(item.lastRunStartTimestamp)),
+            lastRunStartDate = dayjs(item.lastRunStartTimestamp),
+            hasBeenEnded = !isNaN(parseInt(item.lastRunEndTimestamp)),
+            lastRunEndDate = dayjs(item.lastRunEndTimestamp),
+            runDuration = dayjs.duration(item.runDuration);
         if(hasBeenRun){
-            const endDate = dayjs(item.lastRunStartTimestamp).add(dayjs.duration(item.runDuration));
+            const endDate = lastRunStartDate.add(runDuration);
             if(
                 now.isAfter(endDate) // is expired
                 &&
                 (
-                    isNaN(parseInt(item.lastRunEndTimestamp)) // has not been ended
+                    !hasBeenEnded // has not been ended
                     ||
-                    dayjs(item.lastRunEndTimestamp).isBefore(endDate) // has been ended only during a previous run
+                    lastRunEndDate.isBefore(endDate) // has been ended only during a previous run
                 )
             ){
                 isDataUpdated = true;
@@ -334,7 +339,7 @@ console.log('I am ready!');
             ||
             hasDuration && now.isAfter(startDate.add(duration)) // duration elapsed
             ||
-            hasInterval && hasBeenRun && now.isBefore(dayjs(item.lastRunStartTimestamp).add(interval)) // interval not elapsed
+            hasInterval && hasBeenRun && now.isBefore(lastRunStartDate.add(interval)) // interval not elapsed
         ) continue;
         isDataUpdated = true;
         item.lastRunStartTimestamp = now.valueOf();
