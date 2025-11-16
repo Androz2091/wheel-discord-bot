@@ -41,7 +41,7 @@ const
         computed: {
             yearsValue: {
                 get: function(){
-                    return this.modelValue.years;
+                    return this.modelValue.years || undefined;
                 },
                 set: function(value){
                     this.$emit(
@@ -52,7 +52,7 @@ const
             },
             monthsValue: {
                 get: function(){
-                    return this.modelValue.months;
+                    return this.modelValue.months || undefined;
                 },
                 set: function(value){
                     this.$emit(
@@ -63,7 +63,7 @@ const
             },
             daysValue: {
                 get: function(){
-                    return this.modelValue.days;
+                    return this.modelValue.days || undefined;
                 },
                 set: function(value){
                     this.$emit(
@@ -74,7 +74,7 @@ const
             },
             hoursValue: {
                 get: function(){
-                    return this.modelValue.hours;
+                    return this.modelValue.hours || undefined;
                 },
                 set: function(value){
                     this.$emit(
@@ -85,7 +85,7 @@ const
             },
             minutesValue: {
                 get: function(){
-                    return this.modelValue.minutes;
+                    return this.modelValue.minutes || undefined;
                 },
                 set: function(value){
                     this.$emit(
@@ -96,7 +96,7 @@ const
             },
             secondsValue: {
                 get: function(){
-                    return this.modelValue.seconds;
+                    return this.modelValue.seconds || undefined;
                 },
                 set: function(value){
                     this.$emit(
