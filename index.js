@@ -267,10 +267,10 @@ console.log('I am ready!');
             }
         }
         const
-            duration = dayjs.duration(item.duration),
-            hasDuration = !!duration.valueOf(),
-            interval = dayjs.duration(item.interval),
-            hasInterval = !!interval.valueOf();
+            duration = item.duration && dayjs.duration(item.duration),
+            hasDuration = !!duration?.valueOf(),
+            interval = item.interval && dayjs.duration(item.interval),
+            hasInterval = !!interval?.valueOf();
         if(
             !hasDuration && !hasInterval && hasBeenRun // has no duration/interval and has been run
             ||
