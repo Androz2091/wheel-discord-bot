@@ -339,7 +339,7 @@ console.log('I am ready!');
             ||
             hasDuration && now.isAfter(startDate.add(duration)) // duration elapsed
             ||
-            hasInterval && hasBeenRun && now.isBefore(lastRunStartDate.add(interval)) // interval not elapsed
+            hasInterval && hasBeenRun && now.isBefore(lastRunStartDate.add(runDuration).add(interval)) // interval not elapsed
         ) continue;
         isDataUpdated = true;
         item.lastRunStartTimestamp = now.valueOf();
