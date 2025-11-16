@@ -467,6 +467,7 @@ const
                                 >{{ humanize(dayjs.duration(item.runDuration).valueOf()) }}</td>
                                 <td
                                     class="Main__schedule__item__startDate"
+                                    :title="item.startTimestamp ? dayjs(item.startTimestamp).format('dddd, MMMM D, YYYY hh:mm:ss A') : undefined"
                                 >{{ dayjs(item.startTimestamp).format('lll') }}</td>
                                 <td
                                     class="Main__schedule__item__interval"
@@ -476,6 +477,7 @@ const
                                 >{{ item.duration && dayjs.duration(item.duration).valueOf() ? humanize(dayjs.duration(item.duration).valueOf()) : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__lastRunDate"
+                                    :title="item.lastRunStartTimestamp ? dayjs(item.lastRunStartTimestamp).format('dddd, MMMM D, YYYY hh:mm:ss A') : undefined"
                                 >{{ item.lastRunStartTimestamp ? dayjs(item.lastRunStartTimestamp).format('lll') : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__actions"
