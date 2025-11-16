@@ -473,7 +473,7 @@ const
                                 >{{ item.interval && dayjs.duration(item.interval).valueOf() ? humanize(dayjs.duration(item.interval).valueOf()) : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__duration"
-                                >{{ item.interval && dayjs.duration(item.interval).valueOf() ? humanize(dayjs.duration(item.interval).valueOf()) : '-' }}</td>
+                                >{{ item.duration && dayjs.duration(item.duration).valueOf() ? humanize(dayjs.duration(item.duration).valueOf()) : '-' }}</td>
                                 <td
                                     class="Main__schedule__item__lastRunDate"
                                 >{{ item.lastRunStartTimestamp ? dayjs(item.lastRunStartTimestamp).format('lll') : '-' }}</td>
