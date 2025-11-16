@@ -9,12 +9,14 @@
         "@fastify/cors": "^10",
         "@fastify/static": "^8.3.0",
         "canvas": "^3.2.0",
+        "chrono-node": "^2.9.0",
         "dayjs": "^1.11.19",
         "discord.js": "^14.9.0",
         "fastify": "^5.6.2",
         "gif-encoder-2": "^1.0.5",
         "gifken": "^3.0.4",
-        "joi": "^18.0.1"
+        "joi": "^18.0.1",
+        "ms": "^2.1.3"
     },
     "scripts": {
         "deploy": "bun deploy.js",

@@ -40,6 +40,42 @@ const commands = [
     {
         name: 'wheel-members-online-role',
         description: 'Spin the wheel using online role members'
+    },
+    {
+        name: 'wheel-reactions-schedule',
+        description: 'Spin the wheel with reactions on a schedule',
+        options: [
+            {
+                name: 'content',
+                description: 'Message content',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            },
+            {
+                name: 'run-duration',
+                description: 'Time people have to react',
+                type: ApplicationCommandOptionType.String,
+                required: true
+            },
+            {
+                name: 'start-date',
+                description: 'Date of the first run (default: now)',
+                type: ApplicationCommandOptionType.String,
+                required: false
+            },
+            {
+                name: 'interval',
+                description: 'Time between recurrent runs (default: no recurrence)',
+                type: ApplicationCommandOptionType.String,
+                required: false
+            },
+            {
+                name: 'duration',
+                description: 'Time until recurrent runs end (default: no recurrence)',
+                type: ApplicationCommandOptionType.String,
+                required: false
+            }
+        ]
     }
 ];
 

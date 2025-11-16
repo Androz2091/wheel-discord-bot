@@ -1,5 +1,7 @@
 import Joi from 'joi';
 import Discord from 'discord.js';
+import ms from 'ms';
+import { parseDate } from 'chrono-node';
 import dayjs from 'dayjs';
 import dayjsDuration from 'dayjs/plugin/duration';
 
@@ -91,7 +93,15 @@ const
         });
         await new Promise(resolve => setTimeout(resolve, 5000));
         await interaction.editReply({ content: template(winnerOption.label) });
-    };
+    },
+    durationAsObject = duration => ({
+        years: duration.years(),
+        months: duration.months(),
+        days: duration.days(),
+        hours: duration.hours(),
+        minutes: duration.minutes(),
+        seconds: duration.seconds()
+    });
 
 const client = new Discord.Client({
     intents: Object
@@ -186,6 +196,54 @@ client.on('interactionCreate', async (interaction) => {
             await generateAndSendWheel(interaction, options);
         }
 
+        if(interaction.commandName === 'wheel-reactions-schedule'){
+            await interaction.deferReply();
+            const
+                [
+                    content,
+                    runDurationString,
+                    startDateString,
+                    intervalString,
+                    durationString
+                ] = [
+                    'content',
+                    'run-duration',
+                    'start-date',
+                    'interval',
+                    'duration'
+                ].map(key => interaction.options.getString(key)),
+                runDuration = (() => {
+                    try {
+                        return ms(runDurationString);
+                    }
+                    catch {}
+                })(),
+                startTimestamp = dayjs(parseDate(startDateString)).valueOf(),
+                interval = intervalString && ms(intervalString),
+                duration = durationString && ms(durationString);
+            if(!content)
+                return interaction.editReply(':x: Invalid content');
+            if(!runDuration)
+                return interaction.editReply(':x: Invalid run duration');
+            if(startDateString !== null && !startTimestamp)
+                return interaction.editReply(':x: Invalid start date');
+            if(intervalString !== null && !interval)
+                return interaction.editReply(':x: Invalid interval');
+            if(durationString !== null && !duration)
+                return interaction.editReply(':x: Invalid duration');
+            const { schedule } = JSON.parse(JSON.stringify(data));
+            schedule.push({
+                id: Bun.randomUUIDv7(),
+                startTimestamp: startTimestamp || Date.now(),
+                isEnabled: true,
+                runDuration: durationAsObject(dayjs.duration(runDuration)),
+                duration: duration && durationAsObject(dayjs.duration(duration)),
+                interval: interval && durationAsObject(dayjs.duration(interval)),
+                messageContent: content
+            });
+            await setData({ schedule });
+            await interaction.editReply('Wheel spin scheduled successfully!');
+        }
     }
 
 });
