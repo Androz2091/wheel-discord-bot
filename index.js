@@ -91,7 +91,7 @@ const
                 name: 'wheel.gif'
             }]
         });
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 10000));
         await interaction.editReply({ content: template(winnerOption.label) });
     },
     durationAsObject = duration => ({
