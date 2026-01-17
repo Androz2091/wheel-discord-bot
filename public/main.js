@@ -251,6 +251,15 @@ const
                     interval: this.intervalInput,
                     messageContent: this.messageContentInput
                 });
+            },
+            insertCountdown: function(){
+                if(this.isRunDurationInvalid) return;
+                this.messageContentInput ??= '';
+                this.messageContentInput += `<t:${
+                    dayjs(this.startTimestampInput)
+                        .add(dayjs.duration(this.runDurationInput).asMilliseconds(), 'milliseconds')
+                        .unix()
+                }:R>`;
             }
         },
         beforeMount: function(){
@@ -340,6 +349,15 @@ const
                             step="1"
                             v-model="startTimestampInput"
                         >
+                    </label>
+                    <label style="display: contents">
+                        <span>Countdown</span>
+                        <button
+                            class="btn btn-secondary"
+                            type="button"
+                            :disabled="isRunDurationInvalid"
+                            @click="insertCountdown"
+                        >Insert countdown</button>
                     </label>
                     <label style="display: contents">
                         <span>Interval</span>
