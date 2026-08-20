@@ -50,6 +50,10 @@ const commands = [
         description: 'Spin the wheel using online members with the guild clan tag'
     },
     {
+        name: 'wheel-top-chatters',
+        description: 'Spin the wheel using today\'s top chatters (75th percentile)'
+    },
+    {
         name: 'wheel-reactions-schedule',
         description: 'Spin the wheel with reactions on a schedule',
         options: [

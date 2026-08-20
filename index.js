@@ -6,11 +6,15 @@ import ms from 'ms';
 import { parseDate } from 'chrono-node';
 import dayjs from 'dayjs';
 import dayjsDuration from 'dayjs/plugin/duration';
+import dayjsUtc from 'dayjs/plugin/utc';
+import dayjsTimezone from 'dayjs/plugin/timezone';
 
 import { createGIF } from './wheel.js';
 import { initFastify } from './fastify.js';
 
 dayjs.extend(dayjsDuration);
+dayjs.extend(dayjsUtc);
+dayjs.extend(dayjsTimezone);
 
 if(!process.env.NO_RESPAWN) process.on(
     'uncaughtException',
@@ -143,6 +147,47 @@ const
             .finally(() => guildMembersFetchState.set(guild.id, { timestamp: Date.now(), promise: null }));
         guildMembersFetchState.set(guild.id, { timestamp: Date.now(), promise });
         return promise;
+    },
+    fetchChannelMessagesSince = async (channel, sinceTimestamp) => {
+        const messages = [];
+        let before;
+        for(;;){
+            const batch = await channel.messages.fetch({
+                limit: 100,
+                ...(before && { before })
+            });
+            if(!batch.size) break;
+            let done = false;
+            for(const message of batch.values()){
+                if(message.createdTimestamp < sinceTimestamp){
+                    done = true;
+                    break;
+                }
+                if(message.createdTimestamp <= Date.now())
+                    messages.push(message);
+            }
+            if(done || batch.size < 100) break;
+            before = batch.last().id;
+        }
+        return messages;
+    },
+    getMembersInPercentile = (messages, percentile) => {
+        const counts = new Map();
+        for(const message of messages){
+            if(message.author.bot) continue;
+            const existing = counts.get(message.author.id);
+            if(existing) existing.count++;
+            else counts.set(message.author.id, {
+                count: 1,
+                username: message.author.username
+            });
+        }
+        if(!counts.size) return [];
+        const sortedCounts = [...counts.values()].map(({ count }) => count).sort((a, b) => a - b);
+        const threshold = sortedCounts[Math.ceil(percentile / 100 * sortedCounts.length) - 1];
+        return [...counts.values()]
+            .filter(({ count }) => count >= threshold)
+            .sort((a, b) => b.count - a.count);
     };
 
 const client = new Discord.Client({
@@ -301,6 +346,21 @@ client.on('interactionCreate', async (interaction) => {
             });
             await setData({ schedule });
             await interaction.editReply('Wheel spin scheduled successfully!');
+        }
+
+        if(interaction.commandName === 'wheel-top-chatters'){
+            await interaction.deferReply();
+            const
+                startOfDay = dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf(),
+                messages = await fetchChannelMessagesSince(interaction.channel, startOfDay),
+                topChatters = getMembersInPercentile(messages, 75),
+                options = topChatters.map(({ username }, idx) => ({
+                    label: username,
+                    color: getColorByIndex(idx)
+                }));
+            if(!options.length)
+                return interaction.editReply('No messages found today!');
+            await generateAndSendWheel(interaction, options, { replyMethod: 'editReply' });
         }
     }
 
