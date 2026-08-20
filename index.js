@@ -63,7 +63,7 @@ const
                             isEnabled: Joi.boolean().required(),
                             selectionMode: Joi
                                 .string()
-                                .valid('reaction', 'clanMember', 'online', 'clanMemberAndOnline')
+                                .valid('reaction', 'clanMember', 'online', 'clanMemberAndOnline', 'topChatter')
                                 .default('reaction'),
                             lastRunStartTimestamp: Joi.number().allow(null).default(null),
                             runDuration: durationSchema,
@@ -193,6 +193,7 @@ const
             const existing = counts.get(message.author.id);
             if(existing) existing.count++;
             else counts.set(message.author.id, {
+                id: message.author.id,
                 count: 1,
                 username: message.author.username
             });
@@ -435,6 +436,19 @@ console.log('I am ready!');
                         .then(reactions => reactions.flatMap(reaction => reaction.users.cache.filter(user => !user.bot).toJSON()))
                         .then(users => [...new Set(users.map(user => user.id))])
                         .then(userIds => userIds.map(userId => message.guild.members.cache.get(userId).displayName));
+                }
+                else if(item.selectionMode === 'topChatter'){
+                    usernames = await Promise
+                        .resolve(dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf())
+                        .then(startOfDay => fetchGuildMessagesSince(message.guild, startOfDay))
+                        .then(messages => getMembersInPercentile(messages, 75))
+                        .then(topChatters =>
+                            topChatters
+                                .map(
+                                    ({ id, username }) =>
+                                        message.guild.members.cache.get(id)?.displayName || username
+                                )
+                        );
                 }
                 else {
                     const

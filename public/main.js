@@ -377,6 +377,15 @@ const
                             value="clanMemberAndOnline"
                             v-model="selectionModeInput"
                         >Clan + online</label>
+                        <label
+                            class="EditItem__form__selectionMode__input"
+                        ><input
+                            class="form-check-input"
+                            type="radio"
+                            name="selectionMode"
+                            value="topChatter"
+                            v-model="selectionModeInput"
+                        >Top chatter</label>
                     </div>
                     <template
                         v-if="selectionModeInput === 'reaction'"
