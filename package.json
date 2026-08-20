@@ -21,5 +21,8 @@
     "scripts": {
         "deploy": "bun deploy.js",
         "start": "bun index.js"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.3.14"
     }
 }
