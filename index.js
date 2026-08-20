@@ -171,6 +171,21 @@ const
         }
         return messages;
     },
+    fetchGuildMessagesSince = async (guild, sinceTimestamp) => {
+        const channels = guild.channels.cache.filter(channel => channel.isTextBased() && channel.viewable);
+        return (
+            await Promise.all(
+                channels.map(async channel => {
+                    try {
+                        return await fetchChannelMessagesSince(channel, sinceTimestamp);
+                    }
+                    catch {
+                        return [];
+                    }
+                })
+            )
+        ).flat();
+    },
     getMembersInPercentile = (messages, percentile) => {
         const counts = new Map();
         for(const message of messages){
@@ -352,7 +367,7 @@ client.on('interactionCreate', async (interaction) => {
             await interaction.deferReply();
             const
                 startOfDay = dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf(),
-                messages = await fetchChannelMessagesSince(interaction.channel, startOfDay),
+                messages = await fetchGuildMessagesSince(interaction.guild, startOfDay),
                 topChatters = getMembersInPercentile(messages, 75),
                 options = topChatters.map(({ username }, idx) => ({
                     label: username,
