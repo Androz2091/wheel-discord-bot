@@ -51,7 +51,7 @@ const commands = [
     },
     {
         name: 'wheel-top-chatters',
-        description: 'Spin the wheel using today\'s top chatters (75th percentile)'
+        description: 'Spin the wheel using today\'s top 5 chatters'
     },
     {
         name: 'wheel-reactions-schedule',

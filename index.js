@@ -186,7 +186,7 @@ const
             )
         ).flat();
     },
-    getMembersInPercentile = (messages, percentile) => {
+    getTopChatters = (messages, limit = 5) => {
         const counts = new Map();
         for(const message of messages){
             if(message.author.bot) continue;
@@ -198,12 +198,9 @@ const
                 username: message.author.username
             });
         }
-        if(!counts.size) return [];
-        const sortedCounts = [...counts.values()].map(({ count }) => count).sort((a, b) => a - b);
-        const threshold = sortedCounts[Math.ceil(percentile / 100 * sortedCounts.length) - 1];
         return [...counts.values()]
-            .filter(({ count }) => count >= threshold)
-            .sort((a, b) => b.count - a.count);
+            .sort((a, b) => b.count - a.count)
+            .slice(0, limit);
     };
 
 const client = new Discord.Client({
@@ -369,7 +366,7 @@ client.on('interactionCreate', async (interaction) => {
             const
                 startOfDay = dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf(),
                 messages = await fetchGuildMessagesSince(interaction.guild, startOfDay),
-                topChatters = getMembersInPercentile(messages, 75),
+                topChatters = getTopChatters(messages),
                 options = topChatters.map(({ username }, idx) => ({
                     label: username,
                     color: getColorByIndex(idx)
@@ -441,7 +438,7 @@ console.log('I am ready!');
                     usernames = await Promise
                         .resolve(dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf())
                         .then(startOfDay => fetchGuildMessagesSince(message.guild, startOfDay))
-                        .then(messages => getMembersInPercentile(messages, 75))
+                        .then(messages => getTopChatters(messages))
                         .then(topChatters =>
                             topChatters
                                 .map(
