@@ -66,6 +66,7 @@ const
                                 .valid('reaction', 'clanMember', 'online', 'clanMemberAndOnline', 'topChatter')
                                 .default('reaction'),
                             topChatterCount: Joi.number().integer().min(1).default(5),
+                            topChatterHours: Joi.number().integer().min(1).default(24),
                             lastRunStartTimestamp: Joi.number().allow(null).default(null),
                             runDuration: durationSchema,
                             lastRunEndTimestamp: Joi.number().allow(null).default(null),
@@ -437,8 +438,13 @@ console.log('I am ready!');
                 }
                 else if(item.selectionMode === 'topChatter'){
                     usernames = await Promise
-                        .resolve(dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf())
-                        .then(startOfDay => fetchGuildMessagesSince(message.guild, startOfDay))
+                        .resolve(
+                            dayjs()
+                                .tz(process.env.TIMEZONE)
+                                .subtract(item.topChatterHours, 'hours')
+                                .valueOf()
+                        )
+                        .then(sinceTimestamp => fetchGuildMessagesSince(message.guild, sinceTimestamp))
                         .then(messages => getTopChatters(messages, item.topChatterCount))
                         .then(topChatters =>
                             topChatters

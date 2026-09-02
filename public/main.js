@@ -233,6 +233,7 @@ const
             messageContentInput: undefined,
             selectionModeInput: undefined,
             topChatterCountInput: undefined,
+            topChatterHoursInput: undefined,
             runDurationInput: undefined,
             startTimestampInput: undefined,
             intervalInput: undefined,
@@ -250,6 +251,7 @@ const
                     isEnabled: this.isEnabledInput,
                     selectionMode: this.selectionModeInput,
                     topChatterCount: Math.max(1, parseInt(this.topChatterCountInput, 10) || 5),
+                    topChatterHours: Math.max(1, parseInt(this.topChatterHoursInput, 10) || 24),
                     runDuration: this.runDurationInput,
                     duration: this.durationInput,
                     interval: this.intervalInput,
@@ -271,6 +273,7 @@ const
             this.messageContentInput = this.item.messageContent;
             this.selectionModeInput = this.item.selectionMode || 'reaction';
             this.topChatterCountInput = this.item.topChatterCount ?? 5;
+            this.topChatterHoursInput = this.item.topChatterHours ?? 24;
             this.runDurationInput = this.item.runDuration || {};
             this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm:ss');
             this.intervalInput = this.item.interval || {};
@@ -382,6 +385,7 @@ const
                         >Clan + online</label>
                         <label
                             class="EditItem__form__selectionMode__input"
+                            style="grid-column: 1 / -1"
                         ><input
                             class="form-check-input"
                             type="radio"
@@ -398,7 +402,16 @@ const
                                 v-model.number="topChatterCountInput"
                                 :disabled="selectionModeInput !== 'topChatter'"
                             >
-                            chatter
+                            chatter of the past
+                            <input
+                                type="number"
+                                class="form-control"
+                                style="width: 3rem"
+                                min="1"
+                                v-model.number="topChatterHoursInput"
+                                :disabled="selectionModeInput !== 'topChatter'"
+                            >
+                            hours
                         </label>
                     </div>
                     <template
