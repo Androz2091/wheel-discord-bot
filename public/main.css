@@ -125,13 +125,14 @@
     row-gap: 0.5rem;
 }
 
-.EditItem__form__selectionMode,
+.EditItem__form__selectionMode {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
 .EditItem__form__selectionMode__input {
     display: flex;
     align-items: center;
     column-gap: 0.25rem;
-}
-
-.EditItem__form__selectionMode {
-    justify-content: space-between;
 }

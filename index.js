@@ -65,6 +65,7 @@ const
                                 .string()
                                 .valid('reaction', 'clanMember', 'online', 'clanMemberAndOnline', 'topChatter')
                                 .default('reaction'),
+                            topChatterCount: Joi.number().integer().min(1).default(5),
                             lastRunStartTimestamp: Joi.number().allow(null).default(null),
                             runDuration: durationSchema,
                             lastRunEndTimestamp: Joi.number().allow(null).default(null),
@@ -438,7 +439,7 @@ console.log('I am ready!');
                     usernames = await Promise
                         .resolve(dayjs().tz(process.env.TIMEZONE).startOf('day').valueOf())
                         .then(startOfDay => fetchGuildMessagesSince(message.guild, startOfDay))
-                        .then(messages => getTopChatters(messages))
+                        .then(messages => getTopChatters(messages, item.topChatterCount))
                         .then(topChatters =>
                             topChatters
                                 .map(

@@ -232,6 +232,7 @@ const
             isEnabledInput: undefined,
             messageContentInput: undefined,
             selectionModeInput: undefined,
+            topChatterCountInput: undefined,
             runDurationInput: undefined,
             startTimestampInput: undefined,
             intervalInput: undefined,
@@ -248,6 +249,7 @@ const
                     startTimestamp: dayjs(this.startTimestampInput).valueOf(),
                     isEnabled: this.isEnabledInput,
                     selectionMode: this.selectionModeInput,
+                    topChatterCount: Math.max(1, parseInt(this.topChatterCountInput, 10) || 5),
                     runDuration: this.runDurationInput,
                     duration: this.durationInput,
                     interval: this.intervalInput,
@@ -268,6 +270,7 @@ const
             this.isEnabledInput = this.item.isEnabled || false;
             this.messageContentInput = this.item.messageContent;
             this.selectionModeInput = this.item.selectionMode || 'reaction';
+            this.topChatterCountInput = this.item.topChatterCount ?? 5;
             this.runDurationInput = this.item.runDuration || {};
             this.startTimestampInput = dayjs(this.item.startTimestamp).format('YYYY-MM-DDTHH:mm:ss');
             this.intervalInput = this.item.interval || {};
@@ -385,7 +388,18 @@ const
                             name="selectionMode"
                             value="topChatter"
                             v-model="selectionModeInput"
-                        >Top chatter</label>
+                        >
+                            Top
+                            <input
+                                type="number"
+                                class="form-control"
+                                style="width: 3rem"
+                                min="1"
+                                v-model.number="topChatterCountInput"
+                                :disabled="selectionModeInput !== 'topChatter'"
+                            >
+                            chatter
+                        </label>
                     </div>
                     <template
                         v-if="selectionModeInput === 'reaction'"
